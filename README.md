@@ -43,11 +43,3 @@ A student networking web application built with HTML, CSS, JavaScript, PHP, MySQ
 ## Important scope notes
 This is a college-project foundation, not a production-ready LinkedIn clone. The connection action currently records a pending request but this version does not yet provide accept/reject screens. The opportunities table is created but there is no opportunities management UI yet. Profile photos, post image uploads, password reset, pagination, moderation, and admin roles are not included. Add HTTPS, stricter URL validation, rate limiting, upload validation and deployment secrets before public deployment.
 
-## Suggested viva flow
-1. Explain the browser/client, PHP server and MySQL database.
-2. Register a user and show the hashed password stored in `users`.
-3. Create a post and show the `posts.user_id` foreign key.
-4. Like and comment, then show `likes` and `comments`.
-5. Search students and open a profile.
-6. Add a project and open the XML export.
-7. Explain how `XMLHttpRequest` and `fetch()` send asynchronous HTTP requests.
