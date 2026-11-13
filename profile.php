@@ -1,0 +1,12 @@
+<?php
+require_once __DIR__ . '/includes/functions.php'; require_login();
+$id = isset($_GET['id']) ? (int)$_GET['id'] : (int)current_user()['id'];
+$stmt=db()->prepare("SELECT id,name,email,college,branch,year,headline,about,skills,github,linkedin FROM users WHERE id=?"); $stmt->execute([$id]); $person=$stmt->fetch();
+if(!$person){http_response_code(404); exit('Student not found');}
+$own = $id === (int)current_user()['id']; $pageTitle=$person['name']; require __DIR__ . '/includes/header.php';
+?>
+<section class="profile-card"><div class="cover"></div><div class="profile-main"><div class="avatar big"><?= e(strtoupper(substr($person['name'],0,1))) ?></div><div><h1><?= e($person['name']) ?></h1><p><?= e($person['headline'] ?: $person['branch'].' student') ?></p><small><?= e($person['college']) ?> · <?= e($person['branch']) ?> · Year <?= (int)$person['year'] ?></small></div></div>
+<div class="profile-details"><h3>About</h3><p><?= nl2br(e($person['about'] ?: 'No introduction added yet.')) ?></p><h3>Skills</h3><p><?= e($person['skills'] ?: 'No skills listed yet.') ?></p><div class="actions"><?php if($person['github']): ?><a href="<?= e($person['github']) ?>" target="_blank" rel="noopener">GitHub ↗</a><?php endif; ?> <?php if($person['linkedin']): ?><a href="<?= e($person['linkedin']) ?>" target="_blank" rel="noopener">LinkedIn ↗</a><?php endif; ?></div></div></section>
+<?php if($own): ?><section class="form-card profile-edit"><h2>Edit your profile</h2><form method="post" action="api.php?action=update_profile"><input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+<label>Headline<input name="headline" maxlength="160" value="<?= e($person['headline']) ?>"></label><label>About<textarea name="about" maxlength="2000"><?= e($person['about']) ?></textarea></label><label>Skills (comma separated)<input name="skills" maxlength="500" value="<?= e($person['skills']) ?>"></label><div class="two"><label>GitHub URL<input type="url" name="github" value="<?= e($person['github']) ?>"></label><label>LinkedIn URL<input type="url" name="linkedin" value="<?= e($person['linkedin']) ?>"></label></div><button class="btn">Save profile</button></form></section><?php endif; ?>
+<?php require __DIR__ . '/includes/footer.php'; ?>
